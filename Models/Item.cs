@@ -9,11 +9,13 @@ public partial class Item
 
     public string Name { get; set; } = null!;
 
-    public string Unit { get; set; } = null!;
+    public string? Unit { get; set; }
 
     public string? PhotoUrl { get; set; }
 
     public int? CategoryId { get; set; }
+
+    public bool IsCustom { get; set; } = false;
 
     public virtual Category? Category { get; set; }
 }

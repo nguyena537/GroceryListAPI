@@ -11,5 +11,7 @@
         public string? PhotoUrl { get; set; }
 
         public int? CategoryId { get; set; }
+        
+        public bool IsCustom { get; set; }
     }
 }

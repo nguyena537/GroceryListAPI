@@ -12,6 +12,6 @@
 
         public string LastName { get; set; } = null!;
 
-        public string Email { get; set; } = null!;s
+        public string Email { get; set; } = null!;
     }
 }

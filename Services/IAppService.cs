@@ -5,12 +5,14 @@ namespace GroceryListAPI.Services
 {
     public interface IAppService
     {
-        Task<ServiceResponse<List<ListItemDto>>> AddItemToList(string itemName, int listId, bool isCustom);
+        Task<ServiceResponse<List<ListItemDto>>> AddExistingItemToList(int listId, int itemId);
+        Task<ServiceResponse<List<ListItemDto>>> AddCustomItemToList(int listId, string itemName);
+        Task<ServiceResponse<List<ListItemDto>>> CreateList(int userId, string listName);
         Task<ServiceResponse<List<ItemDto>>> ViewItemsContainingPhrase(string phrase);
         Task<ServiceResponse<List<ListItemDto>>> ViewItemsInList(int listId);
-        Task<ServiceResponse<ItemDto>> EditItemInList(int listId, char elementToEdit, string newInfo);
+        Task<ServiceResponse<ItemDto>> EditItemInList(int listId, int itemId, char elementToEdit, string newInfo);
         Task<ServiceResponse<ListItemDto>> CrossOffItem(int listId, int itemId);
-        Task<ServiceResponse<ListItemDto>> RemoveItemFromList(int listId, int itemId);
+        Task<ServiceResponse<List<ListItemDto>>> RemoveItemFromList(int listId, int itemId);
 
         Task<ServiceResponse<AppUserSettingDto>> ToggleShowCustom(int userId);
         Task<ServiceResponse<AppUserSettingDto>> ToggleDarkMode(int userId);
