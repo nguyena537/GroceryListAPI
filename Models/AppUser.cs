@@ -19,5 +19,7 @@ public partial class AppUser
 
     public virtual AppUserSetting? AppUserSetting { get; set; }
 
+    public virtual ICollection<Category> Categories { get; } = new List<Category>();
+
     public virtual ICollection<GroceryList> GroceryLists { get; } = new List<GroceryList>();
 }

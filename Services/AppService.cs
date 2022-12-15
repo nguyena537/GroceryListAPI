@@ -88,19 +88,143 @@ namespace GroceryListAPI.Services
             return response;
         }
 
-        public Task<ServiceResponse<List<ListItemDto>>> AddCustomItemToList(int listId, string itemName)
-        { 
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<ListItemDto>> CrossOffItem(int listId, int itemId)
+        public async Task<ServiceResponse<List<ListItemDto>>> AddCustomItemToList(int listId, string itemName)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ServiceResponse<ItemDto>> EditItemInList(int listId, int itemId, char elementToEdit, string newInfo)
+        public async Task<ServiceResponse<List<ListItemDto>>> ToggleCrossedOff(int listId, int itemId)
         {
-            throw new NotImplementedException();
+            var response = new ServiceResponse<List<ListItemDto>>();
+
+            try
+            {
+                var itemFound = false;
+
+                var list = await _context.GroceryLists
+                    .FirstOrDefaultAsync(l => l.Id == listId);
+
+                if (list != null)
+                {
+                    var itemList = JsonConvert.DeserializeObject<List<ListItemDto>>(list.ItemsJson);
+
+                    if (itemList != null)
+                    {
+                        for (int i = 0; i < itemList.Count; i++)
+                        {
+                            if (itemList[i].ItemId == itemId)
+                            {
+                                itemList[i].CrossedOff = !itemList[i].CrossedOff;
+                                list.ItemsJson = JsonConvert.SerializeObject(itemList);
+                                itemFound = true;
+                                break;
+                            }
+                        }
+
+                        if (!itemFound)
+                        {
+                            response.Success = false;
+                            response.Message = "Item is not in the list";
+                        }
+                    }
+                    else
+                    {
+                        response.Success = false;
+                        response.Message = "List is empty";
+                    }
+                    response.Data = itemList;
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "List does not exist";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<ListItemDto>>> EditItemInList(int listId, int itemId, char elementToEdit, string newInfo)
+        {
+            var response = new ServiceResponse<List<ListItemDto>>();
+
+            try
+            {
+                var itemFound = false;
+
+                var list = await _context.GroceryLists
+                    .FirstOrDefaultAsync(l => l.Id == listId);
+
+                if (list != null)
+                {
+                    var itemList = JsonConvert.DeserializeObject<List<ListItemDto>>(list.ItemsJson);
+
+                    if (itemList != null)
+                    {
+                        for (int i = 0; i < itemList.Count; i++)
+                        {
+                            if (itemList[i].ItemId == itemId)
+                            {
+                                itemFound = true;
+                                if (elementToEdit == 'c')
+                                {
+                                    itemList[i].Category = newInfo;
+                                }
+                                else if (elementToEdit == 'q')
+                                {
+                                    itemList[i].Quantity = Convert.ToInt32(newInfo);
+                                }
+                                else if (elementToEdit == 'n')
+                                {
+                                    itemList[i].Note = newInfo;
+                                }
+                                else
+                                {
+                                    response.Success = false;
+                                    response.Message = "Invalid elementToEdit. Must be c, q, or n.";
+                                    break;
+                                }
+                                list.ItemsJson = JsonConvert.SerializeObject(itemList);
+                                
+                                break;
+                            }
+                        }
+
+                        if (!itemFound)
+                        {
+                            response.Success = false;
+                            response.Message = "Item is not in the list";
+                        }
+                    }
+                    else
+                    {
+                        response.Success = false;
+                        response.Message = "List is empty";
+                    }
+                    response.Data = itemList;
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "List does not exist";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return response;
         }
 
         public Task<ServiceResponse<List<CategoryDto>>> RemoveCategory(int categoryId)
@@ -167,19 +291,130 @@ namespace GroceryListAPI.Services
         }
 
 
-        public Task<ServiceResponse<AppUserSettingDto>> ToggleDarkMode(int userId)
+        public async Task<ServiceResponse<AppUserSettingDto>> ToggleDarkMode(int userId)
         {
-            throw new NotImplementedException();
+            var response = new ServiceResponse<AppUserSettingDto>();
+
+            try
+            {
+                var appUserSetting = await _context.AppUserSettings
+                    .FirstOrDefaultAsync(u => u.AppUserId == userId);
+
+                if (appUserSetting != null)
+                {
+                    appUserSetting.DarkMode = !appUserSetting.DarkMode;
+                    var newUserSetting = new AppUserSettingDto();
+                    newUserSetting.AppUserId = userId;
+                    newUserSetting.DarkMode = appUserSetting.DarkMode;
+                    newUserSetting.ShowCustom = appUserSetting.ShowCustom;
+                    response.Data = newUserSetting;
+
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "User id does not exist in the database.";
+                }
+
+                
+                
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
+            return response;
         }
 
-        public Task<ServiceResponse<AppUserSettingDto>> ToggleShowCustom(int userId)
+        public async Task<ServiceResponse<AppUserSettingDto>> ToggleShowCustom(int userId)
         {
-            throw new NotImplementedException();
+            var response = new ServiceResponse<AppUserSettingDto>();
+
+            try
+            {
+                var appUserSetting = await _context.AppUserSettings
+                    .FirstOrDefaultAsync(u => u.AppUserId == userId);
+
+                if (appUserSetting != null)
+                {
+                    appUserSetting.ShowCustom = !appUserSetting.ShowCustom;
+                    var newUserSetting = new AppUserSettingDto();
+                    newUserSetting.AppUserId = userId;
+                    newUserSetting.DarkMode = appUserSetting.DarkMode;
+                    newUserSetting.ShowCustom = appUserSetting.ShowCustom;
+                    response.Data = newUserSetting;
+
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "User id does not exist in the database.";
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
+
+            return response;
         }
 
-        public Task<ServiceResponse<List<CategoryDto>>> ViewAllCategories(int userId)
+        public async Task<ServiceResponse<List<CategoryDto>>> ViewAllCategories(int userId)
         {
-            throw new NotImplementedException();
+            var response = new ServiceResponse<List<CategoryDto>>();
+
+            try
+            {
+                var categories = _context.Categories
+                    .ToList();
+                var currUser = await _context.AppUserSettings
+                    .FirstOrDefaultAsync(u => u.AppUserId == userId);
+                var showCustom = false;
+
+                if (currUser != null)
+                {
+                    showCustom = currUser.ShowCustom;
+                }
+                else
+                { 
+                    throw new Exception("User does not exist");
+                }
+
+                var categoryDtos = new List<CategoryDto>();
+
+                foreach (var category in categories)
+                {
+                    if (category.AppUserId == null || category.AppUserId == userId || showCustom)
+                    {
+                        var newCategoryDto = new CategoryDto();
+                        newCategoryDto.Id = category.Id;
+                        newCategoryDto.Name = category.Name;
+                        newCategoryDto.PhotoUrl = category.PhotoUrl;
+                        newCategoryDto.IsCustom = category.IsCustom;
+
+                        categoryDtos.Add(newCategoryDto);
+                    }
+                    
+                }
+
+                response.Data = categoryDtos;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
+            return response;
         }
 
         public Task<ServiceResponse<List<ItemDto>>> ViewItemsContainingPhrase(string phrase)
