@@ -85,6 +85,7 @@ public partial class GroceryListsDbContext : DbContext
             entity.ToTable("Category");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AppUserId).HasColumnName("appUserId");
             entity.Property(e => e.IsCustom).HasColumnName("isCustom");
             entity.Property(e => e.Name)
                 .HasMaxLength(60)
@@ -94,6 +95,10 @@ public partial class GroceryListsDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("photoUrl");
+
+            entity.HasOne(d => d.AppUser).WithMany(p => p.Categories)
+                .HasForeignKey(d => d.AppUserId)
+                .HasConstraintName("FK_Category_AppUser");
         });
 
         modelBuilder.Entity<GroceryList>(entity =>

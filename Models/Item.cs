@@ -15,7 +15,7 @@ public partial class Item
 
     public int? CategoryId { get; set; }
 
-    public bool IsCustom { get; set; } = false;
+    public bool IsCustom { get; set; }
 
     public virtual Category? Category { get; set; }
 }

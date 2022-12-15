@@ -13,5 +13,9 @@ public partial class Category
 
     public bool IsCustom { get; set; }
 
+    public int? AppUserId { get; set; }
+
+    public virtual AppUser? AppUser { get; set; }
+
     public virtual ICollection<Item> Items { get; } = new List<Item>();
 }
