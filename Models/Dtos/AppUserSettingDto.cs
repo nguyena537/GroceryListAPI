@@ -7,5 +7,7 @@
         public bool ShowCustom { get; set; }
 
         public bool DarkMode { get; set; }
+
+        public bool ShowCrossedOff { get; set; }
     }
 }

@@ -9,7 +9,6 @@
         public string Name { get; set; } = null!;
 
         public bool ShowCrossedOff { get; set; }
-
-        public string ItemsJson { get; set; } = null!;
+        public int NumItems { get; set; }
     }
 }
