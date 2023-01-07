@@ -9,7 +9,9 @@ public partial class AppUser
 
     public string Username { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public byte[] PasswordHash { get; set; } = null!;
+
+    public byte[]? PasswordSalt { get; set; }
 
     public string FirstName { get; set; } = null!;
 

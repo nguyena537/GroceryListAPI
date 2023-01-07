@@ -50,10 +50,8 @@ public partial class GroceryListsDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("lastName");
-            entity.Property(e => e.Password)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("password");
+            entity.Property(e => e.PasswordHash).HasColumnName("passwordHash");
+            entity.Property(e => e.PasswordSalt).HasColumnName("passwordSalt");
             entity.Property(e => e.Username)
                 .HasMaxLength(30)
                 .IsUnicode(false)

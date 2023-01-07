@@ -10,7 +10,7 @@
 
         public string? PhotoUrl { get; set; }
 
-        public int? CategoryId { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
         
         public bool IsCustom { get; set; }
     }

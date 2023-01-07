@@ -9,5 +9,7 @@
         public string? PhotoUrl { get; set; }
 
         public bool IsCustom { get; set; }
+
+        public int? AppUserId { get; set; }
     }
 }
